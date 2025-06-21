@@ -1,0 +1,239 @@
+.battle-system {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+
+  .loading-battle {
+    text-align: center;
+    padding: 4rem 2rem;
+
+    h2 {
+      color: #ff6b6b;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  .battle-header {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .challenge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1rem;
+      border-radius: 10px;
+
+      h3 {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+    }
+  }
+
+  .battle-candidates {
+    padding: 2rem;
+    display: grid;
+    gap: 2rem;
+
+    .battle-candidate {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 2px solid #e0e0e0;
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        border-color: #ff6b6b;
+      }
+
+      .candidate-info {
+        margin-bottom: 1rem;
+
+        h4 {
+          color: #333;
+          font-size: 1.3rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .team-badge {
+          background: #667eea;
+          color: white;
+          padding: 0.25rem 0.75rem;
+          border-radius: 15px;
+          font-size: 0.8rem;
+        }
+      }
+
+      .scoring {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        align-items: end;
+
+        .jury-score {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          label {
+            font-weight: 500;
+            color: #666;
+            font-size: 0.9rem;
+          }
+
+          input {
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            transition: border-color 0.3s ease;
+
+            &:focus {
+              outline: none;
+              border-color: #ff6b6b;
+            }
+          }
+
+          span {
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+          }
+        }
+
+        .average-score {
+          grid-column: 1 / -1;
+          text-align: center;
+          font-weight: bold;
+          font-size: 1.1rem;
+          color: #ff6b6b;
+          padding: 0.75rem;
+          background: white;
+          border-radius: 8px;
+          border: 2px solid #ff6b6b;
+        }
+      }
+    }
+  }
+
+  .battle-actions {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+
+    .complete-battle-button {
+      padding: 1rem 3rem;
+      background: linear-gradient(135deg, #e17055, #d63031);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  .remaining-candidates {
+    padding: 2rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+
+    h3 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.5rem;
+
+      .mini-candidate {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: all 0.3s ease;
+
+        span:first-child {
+          display: block;
+          font-weight: 500;
+          margin-bottom: 0.25rem;
+        }
+
+        .mini-score {
+          color: #ff6b6b;
+          font-weight: bold;
+          font-size: 0.9rem;
+        }
+
+        .status-icon {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          font-size: 1.2rem;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        &.best {
+          background: linear-gradient(135deg, #ffd700, #ffed4e);
+          border: 2px solid #f1c40f;
+          transform: scale(1.05);
+          box-shadow: 0 4px 20px rgba(241, 196, 15, 0.3);
+
+          span:first-child {
+            color: #8b4513;
+            font-weight: bold;
+          }
+
+          .mini-score {
+            color: #8b4513;
+            font-size: 1rem;
+          }
+        }
+
+        &.worst {
+          background: linear-gradient(135deg, #ff9999, #ff6b6b);
+          border: 2px solid #e74c3c;
+          box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+
+          span:first-child {
+            color: #fff;
+            font-weight: bold;
+          }
+
+          .mini-score {
+            color: #fff;
+            font-size: 1rem;
+          }
+        }
+
+        &.normal {
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,365 @@
+.conseils-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+.conseils-modal {
+  background: white;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+  margin: auto;
+}
+
+.conseils-header {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.conseils-tabs {
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+
+  .tab {
+    flex: 1;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+
+    &:hover {
+      background: #e9ecef;
+    }
+
+    &:active {
+      background: #dee2e6;
+    }
+
+    &.active {
+      background: white;
+      border-bottom-color: #ff6b6b;
+      color: #ff6b6b;
+    }
+  }
+}
+
+.conseils-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.hygiene-section {
+  h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .rule-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+
+    .rule-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .rule-text {
+      h4 {
+        margin: 0 0 8px 0;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      p {
+        margin: 0;
+        color: #666;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .hygiene-reminder {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    color: #856404;
+  }
+}
+
+.timing-section {
+  h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+  }
+
+  .timing-category {
+    margin-bottom: 30px;
+
+    h4 {
+      color: #ff6b6b;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #ff6b6b;
+      padding-bottom: 5px;
+    }
+
+    .timing-items {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timing-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      border-left: 4px solid #17a2b8;
+
+      .dish-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        strong {
+          color: #333;
+          font-size: 1.1rem;
+        }
+
+        .time-badge {
+          background: #17a2b8;
+          color: white;
+          padding: 4px 10px;
+          border-radius: 15px;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+
+      .tip {
+        margin: 0;
+        color: #666;
+        font-style: italic;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  .timing-general-tips {
+    background: #e7f3ff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+
+    h4 {
+      color: #0056b3;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+        color: #333;
+        line-height: 1.4;
+
+        strong {
+          color: #0056b3;
+        }
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .conseils-overlay {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
+  .conseils-modal {
+    max-height: 95vh;
+    min-height: 70vh;
+  }
+
+  .conseils-header {
+    padding: 15px;
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .close-button {
+      min-width: 40px;
+      min-height: 40px;
+      font-size: 1.3rem;
+    }
+  }
+
+  .conseils-tabs {
+    .tab {
+      padding: 12px 15px;
+      font-size: 0.9rem;
+      min-height: 48px;
+    }
+  }
+
+  .conseils-content {
+    padding: 15px;
+  }
+
+  .hygiene-section {
+    .rules-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rule-card {
+      padding: 12px;
+      gap: 12px;
+
+      .rule-icon {
+        font-size: 1.5rem;
+      }
+
+      .rule-text h4 {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .timing-section {
+    .timing-item {
+      .dish-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+
+        .time-badge {
+          align-self: flex-end;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .conseils-overlay {
+    padding: 5px;
+    padding-top: 10px;
+  }
+
+  .conseils-modal {
+    border-radius: 10px;
+    max-height: 98vh;
+  }
+
+  .conseils-header {
+    padding: 12px;
+
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    .close-button {
+      min-width: 36px;
+      min-height: 36px;
+      font-size: 1.1rem;
+    }
+  }
+
+  .conseils-tabs {
+    .tab {
+      padding: 10px;
+      font-size: 0.8rem;
+      min-height: 44px;
+    }
+  }
+
+  .conseils-content {
+    padding: 12px;
+  }
+
+  .timing-section {
+    .timing-item {
+      padding: 12px;
+
+      .dish-info {
+        .time-badge {
+          font-size: 0.8rem;
+          padding: 3px 8px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+.scoreboard {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+
+  h2 {
+    text-align: center;
+    color: #ff6b6b;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .scoreboard-table {
+    display: grid;
+    gap: 0.5rem;
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 80px 80px 2fr;
+      gap: 1rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 10px;
+      font-weight: bold;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 50px 1fr 80px 60px;
+
+        span:nth-child(5),
+        span:nth-child(6) {
+          display: none;
+        }
+      }
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 100px 80px 80px 2fr;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 50px 1fr 80px 60px;
+
+        span:nth-child(5),
+        .evolution {
+          display: none;
+        }
+      }
+
+      &:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+
+      &.eliminated {
+        opacity: 0.6;
+        background: #ffe6e6;
+      }
+
+      .rank {
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1rem;
+      }
+
+      .name {
+        font-weight: 500;
+      }
+
+      .status {
+        text-align: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+
+        &.active {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        &.eliminated {
+          background: #f8d7da;
+          color: #721c24;
+        }
+      }
+
+      .average {
+        text-align: center;
+        font-weight: bold;
+        color: #ff6b6b;
+      }
+
+      .battles {
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .evolution {
+        display: flex;
+        gap: 0.25rem;
+        flex-wrap: wrap;
+
+        .score-point {
+          padding: 0.2rem 0.4rem;
+          border-radius: 4px;
+          font-size: 0.7rem;
+          font-weight: bold;
+          cursor: help;
+
+          &.high {
+            background: #d4edda;
+            color: #155724;
+          }
+
+          &.medium {
+            background: #fff3cd;
+            color: #856404;
+          }
+
+          &.low {
+            background: #f8d7da;
+            color: #721c24;
+          }
+        }
+      }
+    }
+  }
+}

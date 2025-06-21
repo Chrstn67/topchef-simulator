@@ -1,0 +1,185 @@
+.confirmation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+
+  .confirmation-modal {
+    background: linear-gradient(135deg, #fff8e1, #ffffff);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    border: 3px solid #ff6b6b;
+
+    .modal-header {
+      background: linear-gradient(135deg, #ff6b6b, #d84315);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+
+      h2 {
+        margin: 0 0 1rem 0;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+    }
+
+    .modal-content {
+      padding: 2rem;
+
+      .warning-box {
+        background: #fff3cd;
+        border: 2px solid #ffeaa7;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .warning-icon {
+          font-size: 2rem;
+          flex-shrink: 0;
+        }
+
+        .warning-text {
+          strong {
+            color: #856404;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+          }
+
+          p {
+            color: #856404;
+            margin: 0.25rem 0;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
+
+        .option-card {
+          background: white;
+          border-radius: 15px;
+          padding: 1.5rem;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+          border: 2px solid transparent;
+
+          &:hover {
+            transform: translateY(-5px);
+          }
+
+          &.recheck {
+            border-color: #74b9ff;
+
+            &:hover {
+              border-color: #0984e3;
+              box-shadow: 0 8px 25px rgba(116, 185, 255, 0.3);
+            }
+          }
+
+          &.confirm {
+            border-color: #00b894;
+
+            &:hover {
+              border-color: #00a085;
+              box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+            }
+          }
+
+          .option-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+          }
+
+          .option-content {
+            h3 {
+              color: #333;
+              margin-bottom: 0.5rem;
+              font-size: 1.2rem;
+            }
+
+            p {
+              color: #666;
+              font-size: 0.9rem;
+              line-height: 1.4;
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .modal-actions {
+      padding: 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      border-top: 2px solid #ffccbc;
+      background: #fff8f0;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+
+      button {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+
+        &.recheck-button {
+          background: linear-gradient(135deg, #74b9ff, #0984e3);
+          color: white;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(116, 185, 255, 0.4);
+          }
+        }
+
+        &.confirm-button {
+          background: linear-gradient(135deg, #00b894, #00a085);
+          color: white;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+          }
+        }
+      }
+    }
+  }
+}

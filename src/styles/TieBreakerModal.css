@@ -1,0 +1,215 @@
+.tie-breaker-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+
+  .tie-breaker-modal {
+    background: white;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    .modal-header {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+
+      h2 {
+        margin: 0 0 1rem 0;
+        font-size: 1.8rem;
+      }
+
+      p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+      }
+    }
+
+    .tied-candidates {
+      padding: 2rem;
+
+      h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .tied-candidate {
+        background: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #ff6b6b;
+          transform: translateY(-2px);
+        }
+
+        &.selected {
+          border-color: #d63031;
+          background: #fff5f5;
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(214, 48, 49, 0.2);
+        }
+
+        &.lowest-average {
+          border-color: #e74c3c;
+          background: #fdf2f2;
+          box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+
+          &::before {
+            content: "⚠️ MOYENNE LA PLUS FAIBLE";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: bold;
+          }
+
+          position: relative;
+        }
+
+        .candidate-info {
+          h4 {
+            color: #333;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .lowest-badge {
+              background: #e74c3c;
+              color: white;
+              padding: 0.2rem 0.6rem;
+              border-radius: 12px;
+              font-size: 0.7rem;
+              font-weight: bold;
+            }
+          }
+
+          p {
+            margin: 0.25rem 0;
+            color: #666;
+          }
+        }
+
+        .selection-indicator {
+          margin-top: 1rem;
+          text-align: center;
+
+          span {
+            background: #d63031;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+
+    .selection-info {
+      padding: 1rem 2rem;
+      text-align: center;
+      background: #fff8f0;
+      border-top: 1px solid #ffccbc;
+      border-bottom: 1px solid #ffccbc;
+
+      .selection-count {
+        color: #d84315;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+    }
+
+    .modal-actions {
+      padding: 2rem;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      button {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.cancel-button {
+          background: #6c757d;
+          color: white;
+
+          &:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+          }
+        }
+
+        &.confirm-button {
+          background: linear-gradient(135deg, #d63031, #b71c1c);
+          color: white;
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          }
+
+          &:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.selected-badge {
+  background: #d63031;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(214, 48, 49, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(214, 48, 49, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(214, 48, 49, 0);
+  }
+}

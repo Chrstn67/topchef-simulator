@@ -1,0 +1,211 @@
+.team-formation {
+  background: var(--primary-warm-white);
+  padding: var(--space-2xl);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-strong);
+  border: 1px solid var(--light-gold);
+
+  h2 {
+    text-align: center;
+    color: var(--primary-charcoal);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin-bottom: var(--space-2xl);
+    font-weight: 700;
+    font-family: var(--font-display);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+
+    &::before {
+      font-size: 0.8em;
+    }
+  }
+
+  .team-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+    flex-wrap: wrap;
+
+    .stat {
+      text-align: center;
+      padding: var(--space-xl);
+      background: linear-gradient(
+        135deg,
+        var(--primary-charcoal) 0%,
+        var(--light-charcoal) 100%
+      );
+      color: var(--primary-warm-white);
+      border-radius: var(--radius-lg);
+      min-width: 150px;
+      box-shadow: var(--shadow-medium);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-number {
+        display: block;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        margin-bottom: var(--space-sm);
+        font-family: var(--font-display);
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .teams-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    .team-card {
+      background: var(--primary-warm-white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-medium);
+      border: 3px solid;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-strong);
+      }
+
+      .team-header {
+        padding: var(--space-xl);
+        color: var(--primary-warm-white);
+        text-align: center;
+
+        h3 {
+          margin: 0;
+          font-size: clamp(1.1rem, 2vw, 1.5rem);
+          font-family: var(--font-display);
+          font-weight: 600;
+        }
+
+        .team-count {
+          font-size: 0.9rem;
+          opacity: 0.8;
+          font-weight: 500;
+        }
+
+        &.team-header-1 {
+          background: linear-gradient(
+            135deg,
+            var(--team-color-1-light) 0%,
+            var(--team-color-1) 100%
+          );
+          border-color: var(--team-color-1);
+        }
+
+        &.team-header-2 {
+          background: linear-gradient(
+            135deg,
+            var(--team-color-2-light) 0%,
+            var(--team-color-2) 100%
+          );
+          border-color: var(--team-color-2);
+        }
+
+        &.team-header-3 {
+          background: linear-gradient(
+            135deg,
+            var(--team-color-3-light) 0%,
+            var(--team-color-3) 100%
+          );
+          border-color: var(--team-color-3);
+        }
+
+        &.team-header-4 {
+          background: linear-gradient(
+            135deg,
+            var(--team-color-4-light) 0%,
+            var(--team-color-4) 100%
+          );
+          border-color: var(--team-color-4);
+        }
+      }
+
+      .team-candidates {
+        padding: var(--space-lg);
+
+        .candidate-chip {
+          background: rgba(233, 181, 224, 0.562);
+          padding: var(--space-sm) var(--space-md);
+          margin: var(--space-xxs);
+          border-radius: var(--radius-md);
+          display: inline-block;
+          font-size: 0.85rem;
+          border: 1px solid var(--primary-border-color);
+          font-weight: 500;
+          transition: background-color 0.3s ease, color 0.3s ease;
+
+          &:hover {
+            background-color: var(--primary-grey);
+          }
+        }
+      }
+    }
+  }
+
+  .team-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+
+    button {
+      padding: var(--space-lg) var(--space-xl);
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-width: 160px;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-medium);
+      }
+
+      &.regenerate-button {
+        background: linear-gradient(135deg, #4fb3d1 0%, #b34c4c 100%);
+        color: var(--primary-warm-white);
+        border-radius: 0.5em;
+
+        &:disabled {
+          background: var(--primary-grey);
+          cursor: not-allowed;
+          color: var(--light-charcoal);
+
+          &:hover {
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+
+      &.confirm-button {
+        background: linear-gradient(135deg, #8fec43 0%, #606b38 100%);
+        color: var(--primary-warm-white);
+        border-radius: 0.5em;
+      }
+    }
+  }
+}
