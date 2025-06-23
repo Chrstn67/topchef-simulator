@@ -102,7 +102,25 @@ export default function EliminationSelectionModal({
                   </span>
                   <span className="average-score">
                     Moyenne:{" "}
-                    <strong>{candidate.averageScore.toFixed(1)}/20</strong>
+                    <strong>
+                      {/* Calculer la moyenne correctement */}
+                      {(() => {
+                        // Si c'est la première épreuve, la moyenne est le score de battle
+                        if (candidate.scores && candidate.scores.length === 0) {
+                          return candidate.battleScore.toFixed(1);
+                        }
+                        // Sinon, calculer avec les scores existants + le nouveau score
+                        const allScores = [
+                          ...(candidate.scores || []),
+                          candidate.battleScore,
+                        ];
+                        const average =
+                          allScores.reduce((a, b) => a + b, 0) /
+                          allScores.length;
+                        return average.toFixed(1);
+                      })()}
+                      /20
+                    </strong>
                   </span>
                 </div>
               </div>

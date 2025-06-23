@@ -78,12 +78,12 @@ export default function BattleSystem({
     setCurrentBattle(battle);
     setBattleType(type);
 
-    // Initialiser les scores
+    // Initialiser les scores SANS valeur par défaut
     const initialScores = {};
     battleCandidates.forEach((candidate) => {
       initialScores[candidate.id] = {};
       juries.forEach((jury) => {
-        initialScores[candidate.id][jury.id] = 10;
+        initialScores[candidate.id][jury.id] = "";
       });
     });
     setScores(initialScores);
@@ -110,7 +110,7 @@ export default function BattleSystem({
       ...prev,
       [candidateId]: {
         ...prev[candidateId],
-        [juryId]: Math.max(0, Math.min(20, score)),
+        [juryId]: score === "" ? "" : Math.max(0, Math.min(20, Number(score))),
       },
     }));
   };
@@ -120,7 +120,12 @@ export default function BattleSystem({
 
     // Calculer les moyennes pour cette battle
     const battleResults = currentBattle.candidates.map((candidate) => {
-      const candidateScores = Object.values(scores[candidate.id] || {});
+      const candidateScores = Object.values(scores[candidate.id] || {})
+        .filter(
+          (score) => score !== "" && score !== null && score !== undefined
+        )
+        .map((score) => Number(score));
+
       const average =
         candidateScores.length > 0
           ? candidateScores.reduce((a, b) => a + b, 0) / candidateScores.length
@@ -139,14 +144,16 @@ export default function BattleSystem({
     // Déterminer qui est éliminé (le dernier)
     const eliminated = battleResults[battleResults.length - 1];
 
-    // Mettre à jour les candidats
+    // Mettre à jour les candidats avec calcul corrigé
     const updatedCandidates = candidates.map((candidate) => {
       const battleResult = battleResults.find((r) => r.id === candidate.id);
       if (!battleResult) return candidate;
 
       const newScores = [...candidate.scores, battleResult.battleScore];
       const newAverage =
-        newScores.reduce((a, b) => a + b, 0) / newScores.length;
+        newScores.length > 0
+          ? newScores.reduce((a, b) => a + b, 0) / newScores.length
+          : 0;
 
       return {
         ...candidate,
@@ -238,13 +245,10 @@ export default function BattleSystem({
                     type="number"
                     min="0"
                     max="20"
-                    value={scores[candidate.id]?.[jury.id] || 10}
+                    placeholder="10"
+                    value={scores[candidate.id]?.[jury.id] || ""}
                     onChange={(e) =>
-                      updateScore(
-                        candidate.id,
-                        jury.id,
-                        Number.parseInt(e.target.value)
-                      )
+                      updateScore(candidate.id, jury.id, e.target.value)
                     }
                   />
                   <span>/20</span>
@@ -252,14 +256,20 @@ export default function BattleSystem({
               ))}
               <div className="average-score">
                 Moyenne:{" "}
-                {Object.values(scores[candidate.id] || {}).length > 0
-                  ? (
-                      Object.values(scores[candidate.id] || {}).reduce(
-                        (a, b) => a + b,
-                        0
-                      ) / Object.values(scores[candidate.id] || {}).length
-                    ).toFixed(1)
-                  : "0.0"}
+                {(() => {
+                  const validScores = Object.values(scores[candidate.id] || {})
+                    .filter(
+                      (score) =>
+                        score !== "" && score !== null && score !== undefined
+                    )
+                    .map((score) => Number(score));
+                  return validScores.length > 0
+                    ? (
+                        validScores.reduce((a, b) => a + b, 0) /
+                        validScores.length
+                      ).toFixed(1)
+                    : "0.0";
+                })()}
                 /20
               </div>
             </div>

@@ -36,6 +36,8 @@ export default function MultiBattleSystem({
     useState([]);
   const [showMultiBattleElimination, setShowMultiBattleElimination] =
     useState(false);
+  // NOUVEAU : stocker TOUS les résultats pour les passer à finalizeBattleResults
+  const [allBattleResults, setAllBattleResults] = useState([]);
 
   const activeCandidates = candidates.filter((c) => !c.eliminated);
 
@@ -46,6 +48,23 @@ export default function MultiBattleSystem({
     "Crêpes aux fruits",
     "Cookies",
   ];
+
+  // Fonction helper pour calculer la moyenne d'un candidat de manière cohérente
+  const calculateCandidateAverage = (candidate) => {
+    if (!candidate.scores || candidate.scores.length === 0) return 0;
+    return (
+      candidate.scores.reduce((a, b) => a + b, 0) / candidate.scores.length
+    );
+  };
+
+  // Fonction helper pour obtenir la moyenne actuelle (incluant averageScore si disponible)
+  const getCurrentAverage = (candidate) => {
+    // Utiliser averageScore s'il est défini et > 0, sinon calculer
+    if (candidate.averageScore && candidate.averageScore > 0) {
+      return candidate.averageScore;
+    }
+    return calculateCandidateAverage(candidate);
+  };
 
   useEffect(() => {
     if (currentBattles.length === 0 && activeCandidates.length > 1) {
@@ -109,14 +128,15 @@ export default function MultiBattleSystem({
     setCurrentBattles(newBattles);
     setActiveBattleTab(0);
 
-    // Initialiser les scores seulement pour les jurés autorisés
+    // Initialiser les scores SANS valeur par défaut
     const initialScores = {};
     newBattles.forEach((battle) => {
       battle.candidates.forEach((candidate) => {
         initialScores[candidate.id] = {};
         const authorizedJuries = getAuthorizedJuries(candidate.teamId);
         authorizedJuries.forEach((jury) => {
-          initialScores[candidate.id][jury.id] = 10;
+          // Ne pas définir de valeur par défaut
+          initialScores[candidate.id][jury.id] = "";
         });
       });
     });
@@ -136,7 +156,7 @@ export default function MultiBattleSystem({
       ...prev,
       [candidateId]: {
         ...prev[candidateId],
-        [juryId]: Math.max(0, Math.min(20, score)),
+        [juryId]: score === "" ? "" : Math.max(0, Math.min(20, Number(score))),
       },
     }));
   };
@@ -173,12 +193,19 @@ export default function MultiBattleSystem({
   };
 
   const proceedWithCompletion = () => {
+    console.log("🚀 Starting battle completion process...");
+
     let allResults = [];
 
     // Calculer les résultats pour chaque battle
     currentBattles.forEach((battle) => {
       const battleResults = battle.candidates.map((candidate) => {
-        const candidateScores = Object.values(scores[candidate.id] || {});
+        const candidateScores = Object.values(scores[candidate.id] || {})
+          .filter(
+            (score) => score !== "" && score !== null && score !== undefined
+          )
+          .map((score) => Number(score));
+
         const average =
           candidateScores.length > 0
             ? candidateScores.reduce((a, b) => a + b, 0) /
@@ -200,6 +227,11 @@ export default function MultiBattleSystem({
     // Trier tous les résultats par score
     allResults.sort((a, b) => b.battleScore - a.battleScore);
 
+    console.log("🏆 All battle results:", allResults);
+
+    // CORRECTION : Stocker TOUS les résultats
+    setAllBattleResults(allResults);
+
     // Déterminer les candidats automatiquement qualifiés (top 3 ou 30% des meilleurs)
     const numQualified = Math.max(
       1,
@@ -210,6 +242,9 @@ export default function MultiBattleSystem({
       (result) =>
         !qualifiedCandidates.some((qualified) => qualified.id === result.id)
     );
+
+    console.log("✅ Qualified candidates:", qualifiedCandidates);
+    console.log("⚠️ Eliminable candidates:", eliminableCandidates);
 
     // Si plusieurs battles, utiliser la modale multi-battle
     if (currentBattles.length > 1) {
@@ -245,20 +280,60 @@ export default function MultiBattleSystem({
   };
 
   const finalizeBattleResults = (allResults, eliminatedCandidates) => {
-    // Mettre à jour les candidats
-    const updatedCandidates = candidates.map((candidate) => {
-      const result = allResults.find((r) => r.id === candidate.id);
-      if (!result) return candidate;
+    console.log("🔍 === FINALIZING BATTLE RESULTS ===");
+    console.log("📊 All results received:", allResults);
+    console.log("💀 Eliminated candidates:", eliminatedCandidates);
 
-      const newBattleScores = [...candidate.battleScores, result.battleScore];
-      const newScores = [...candidate.scores, result.battleScore];
+    // Créer un Map des résultats pour un accès plus rapide
+    const resultsMap = new Map();
+    allResults.forEach((result) => {
+      resultsMap.set(result.id, result);
+      console.log(
+        `📝 Mapped result for ${result.name} (ID: ${result.id}): score=${result.battleScore}`
+      );
+    });
+
+    // Mettre à jour les candidats avec calcul corrigé de la moyenne
+    const updatedCandidates = candidates.map((candidate) => {
+      const result = resultsMap.get(candidate.id);
+
+      if (!result) {
+        console.log(
+          `❌ No result found for candidate ${candidate.name} (ID: ${candidate.id}) - not in this battle`
+        );
+        return candidate;
+      }
+
+      console.log(`🔄 Updating candidate ${candidate.name}:`);
+      console.log(
+        `   - Current scores: [${candidate.scores?.join(", ") || "none"}]`
+      );
+      console.log(`   - Battle score to add: ${result.battleScore}`);
+
+      // Ajouter le nouveau score aux scores existants
+      const currentScores = candidate.scores || [];
+      const newScores = [...currentScores, result.battleScore];
+      const newBattleScores = [
+        ...(candidate.battleScores || []),
+        result.battleScore,
+      ];
+
+      // Calculer la nouvelle moyenne générale
       const newAverage =
-        newScores.reduce((a, b) => a + b, 0) / newScores.length;
+        newScores.length > 0
+          ? newScores.reduce((a, b) => a + b, 0) / newScores.length
+          : 0;
+
       const isEliminated = eliminatedCandidates.some(
         (e) => e.id === candidate.id
       );
 
-      return {
+      console.log(`   - New scores: [${newScores.join(", ")}]`);
+      console.log(`   - Old average: ${candidate.averageScore}`);
+      console.log(`   - New average: ${newAverage}`);
+      console.log(`   - Is eliminated: ${isEliminated}`);
+
+      const updatedCandidate = {
         ...candidate,
         scores: newScores,
         battleScores: newBattleScores,
@@ -269,6 +344,18 @@ export default function MultiBattleSystem({
           ? battleRound
           : candidate.eliminatedAtBattle,
       };
+
+      console.log(`✅ Updated candidate ${candidate.name}:`, updatedCandidate);
+      return updatedCandidate;
+    });
+
+    console.log("📊 === FINAL UPDATED CANDIDATES ===");
+    updatedCandidates.forEach((candidate) => {
+      console.log(
+        `${candidate.name}: scores=[${
+          candidate.scores?.join(", ") || "none"
+        }], avg=${candidate.averageScore}`
+      );
     });
 
     setCandidates(updatedCandidates);
@@ -305,22 +392,28 @@ export default function MultiBattleSystem({
   };
 
   const handleTieBreakerResult = (selectedCandidates) => {
-    finalizeBattleResults(battleResults, selectedCandidates);
+    // CORRECTION : Utiliser allBattleResults au lieu de battleResults
+    finalizeBattleResults(allBattleResults, selectedCandidates);
     setShowTieBreaker(false);
     setTiedCandidates([]);
     setBattleResults([]);
+    setAllBattleResults([]);
   };
 
   const handleEliminationSelection = (selectedCandidates) => {
-    finalizeBattleResults(battleResultsForElimination, selectedCandidates);
+    // CORRECTION : Utiliser allBattleResults au lieu de battleResultsForElimination
+    finalizeBattleResults(allBattleResults, selectedCandidates);
     setShowEliminationSelection(false);
     setBattleResultsForElimination([]);
+    setAllBattleResults([]);
   };
 
   const handleMultiBattleElimination = (selectedCandidates) => {
-    finalizeBattleResults(battleResultsForElimination, selectedCandidates);
+    // CORRECTION : Utiliser allBattleResults au lieu de battleResultsForElimination
+    finalizeBattleResults(allBattleResults, selectedCandidates);
     setShowMultiBattleElimination(false);
     setBattleResultsForElimination([]);
+    setAllBattleResults([]);
   };
 
   // Fonction pour vérifier si tous les candidats ont reçu toutes leurs notes
@@ -330,7 +423,10 @@ export default function MultiBattleSystem({
         const authorizedJuries = getAuthorizedJuries(candidate.teamId);
         return authorizedJuries.every(
           (jury) =>
-            scores[candidate.id] && scores[candidate.id][jury.id] !== undefined
+            scores[candidate.id] &&
+            scores[candidate.id][jury.id] !== "" &&
+            scores[candidate.id][jury.id] !== null &&
+            scores[candidate.id][jury.id] !== undefined
         );
       })
     );
@@ -345,6 +441,8 @@ export default function MultiBattleSystem({
         authorizedJuries.forEach((jury) => {
           if (
             !scores[candidate.id] ||
+            scores[candidate.id][jury.id] === "" ||
+            scores[candidate.id][jury.id] === null ||
             scores[candidate.id][jury.id] === undefined
           ) {
             missing++;
@@ -353,12 +451,6 @@ export default function MultiBattleSystem({
       })
     );
     return missing;
-  };
-
-  // Fonction pour déterminer le rang d'un candidat
-  const getCandidateRank = (candidate, sortedCandidates) => {
-    const index = sortedCandidates.findIndex((c) => c.id === candidate.id);
-    return index + 1;
   };
 
   if (currentBattles.length === 0) {
@@ -372,13 +464,14 @@ export default function MultiBattleSystem({
     );
   }
 
-  // Trier les candidats actifs par moyenne décroissante
+  // Trier les candidats actifs par moyenne décroissante - UTILISER LA FONCTION HELPER
   const sortedActiveCandidates = [...activeCandidates].sort(
-    (a, b) => b.averageScore - a.averageScore
+    (a, b) => getCurrentAverage(b) - getCurrentAverage(a)
   );
-  const bestScore = sortedActiveCandidates[0]?.averageScore;
-  const worstScore =
-    sortedActiveCandidates[sortedActiveCandidates.length - 1]?.averageScore;
+  const bestScore = getCurrentAverage(sortedActiveCandidates[0]);
+  const worstScore = getCurrentAverage(
+    sortedActiveCandidates[sortedActiveCandidates.length - 1]
+  );
 
   // Déterminer les candidats automatiquement qualifiés
   const numQualified = Math.max(
@@ -386,8 +479,9 @@ export default function MultiBattleSystem({
     Math.min(3, Math.floor(sortedActiveCandidates.length * 0.3))
   );
   const qualifiedCandidates = sortedActiveCandidates.slice(0, numQualified);
-  const qualifiedThreshold =
-    qualifiedCandidates[qualifiedCandidates.length - 1]?.averageScore;
+  const qualifiedThreshold = getCurrentAverage(
+    qualifiedCandidates[qualifiedCandidates.length - 1]
+  );
 
   return (
     <div className="multi-battle-system">
@@ -511,13 +605,13 @@ export default function MultiBattleSystem({
                       <div className="stat">
                         <span className="stat-label">Moyenne générale</span>
                         <span className="stat-value">
-                          {candidate.averageScore.toFixed(1)}/20
+                          {getCurrentAverage(candidate).toFixed(1)}/20
                         </span>
                       </div>
                       <div className="stat">
                         <span className="stat-label">Épreuves</span>
                         <span className="stat-value">
-                          {candidate.scores.length}
+                          {candidate.scores ? candidate.scores.length : 0}
                         </span>
                       </div>
                     </div>
@@ -540,12 +634,13 @@ export default function MultiBattleSystem({
                               min="0"
                               max="20"
                               step="0.5"
-                              value={scores[candidate.id]?.[jury.id] || 10}
+                              placeholder="10"
+                              value={scores[candidate.id]?.[jury.id] || ""}
                               onChange={(e) =>
                                 updateScore(
                                   candidate.id,
                                   jury.id,
-                                  Number.parseFloat(e.target.value)
+                                  e.target.value
                                 )
                               }
                             />
@@ -557,16 +652,24 @@ export default function MultiBattleSystem({
                             Moyenne épreuve:
                           </span>
                           <span className="average-value">
-                            {Object.values(scores[candidate.id] || {}).length >
-                            0
-                              ? (
-                                  Object.values(
-                                    scores[candidate.id] || {}
-                                  ).reduce((a, b) => a + b, 0) /
-                                  Object.values(scores[candidate.id] || {})
-                                    .length
-                                ).toFixed(1)
-                              : "0.0"}
+                            {(() => {
+                              const validScores = Object.values(
+                                scores[candidate.id] || {}
+                              )
+                                .filter(
+                                  (score) =>
+                                    score !== "" &&
+                                    score !== null &&
+                                    score !== undefined
+                                )
+                                .map((score) => Number(score));
+                              return validScores.length > 0
+                                ? (
+                                    validScores.reduce((a, b) => a + b, 0) /
+                                    validScores.length
+                                  ).toFixed(1)
+                                : "0.0";
+                            })()}
                             /20
                           </span>
                         </div>
@@ -604,13 +707,16 @@ export default function MultiBattleSystem({
         <div className="candidates-status">
           {sortedActiveCandidates.map((candidate, index) => {
             const rank = index + 1;
-            const isFirst = candidate.averageScore === bestScore;
+            const currentAvg = getCurrentAverage(candidate);
+            const isFirst = currentAvg === bestScore && currentAvg > 0;
             const isLast =
-              candidate.averageScore === worstScore &&
-              sortedActiveCandidates.length > 1;
+              currentAvg === worstScore &&
+              sortedActiveCandidates.length > 1 &&
+              currentAvg > 0;
             const isQualified =
-              candidate.averageScore >= qualifiedThreshold &&
-              rank <= numQualified;
+              currentAvg >= qualifiedThreshold &&
+              rank <= numQualified &&
+              currentAvg > 0;
 
             return (
               <div
@@ -621,6 +727,10 @@ export default function MultiBattleSystem({
                   isQualified ? "qualified-candidate" : ""
                 }`}
               >
+                {/* NOM EN HAUT */}
+                <div className="name">{candidate.name}</div>
+
+                {/* RANG ET ICÔNE */}
                 <div className="rank-indicator">
                   <span className="rank-number">#{rank}</span>
                   {isFirst && <span className="rank-icon">🏆</span>}
@@ -629,16 +739,22 @@ export default function MultiBattleSystem({
                     <span className="rank-icon">✅</span>
                   )}
                 </div>
-                <span className="name">{candidate.name}</span>
-                <span className="score">
-                  {candidate.averageScore.toFixed(1)}/20
-                </span>
-                <span className="battles">
-                  {candidate.scores.length} épreuves
-                </span>
-                {isQualified && (
-                  <span className="qualification-badge">QUALIFIÉ</span>
-                )}
+
+                {/* STATS EN BAS */}
+                <div className="candidate-stats-row">
+                  <span className="score">
+                    {/* Utiliser la fonction helper pour un calcul cohérent */}
+                    {getCurrentAverage(candidate).toFixed(1)}/20
+                  </span>
+                  <span className="battles">
+                    {candidate.scores ? candidate.scores.length : 0} épreuves
+                  </span>
+                  {isQualified && (
+                    <span className="qualification-badge">
+                      MEILLEURE MOYENNE
+                    </span>
+                  )}
+                </div>
               </div>
             );
           })}

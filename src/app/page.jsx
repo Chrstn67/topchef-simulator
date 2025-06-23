@@ -204,8 +204,30 @@ export default function TopChefApp() {
             <div className="winner-announcement">
               <h2>🏆 VAINQUEUR</h2>
               <div className="winner-card">
-                <h3>{winner.name}</h3>
-                <p>Moyenne: {winner.averageScore.toFixed(1)}/20</p>
+                <div className="winner-name">
+                  <h3>{winner.name}</h3>
+                </div>
+                <div className="winner-stats">
+                  <div className="winner-score">
+                    <span className="score-label">Moyenne générale</span>
+                    <span className="score-value">
+                      {/* Calcul correct de la moyenne générale */}
+                      {winner.scores && winner.scores.length > 0
+                        ? (
+                            winner.scores.reduce((a, b) => a + b, 0) /
+                            winner.scores.length
+                          ).toFixed(1)
+                        : "0.0"}
+                      /20
+                    </span>
+                  </div>
+                  <div className="winner-battles">
+                    <span className="battles-label">Épreuves</span>
+                    <span className="battles-value">
+                      {winner.scores ? winner.scores.length : 0}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -257,14 +279,130 @@ export default function TopChefApp() {
           }
         }
 
+        .winner-card {
+          background: linear-gradient(
+            135deg,
+            #ffd700 0%,
+            #ffed4e 50%,
+            #f39c12 100%
+          );
+          border-radius: 20px;
+          padding: 2rem;
+          text-align: center;
+          box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+          border: 3px solid #f39c12;
+          position: relative;
+          overflow: hidden;
+          animation: goldShimmer 3s ease-in-out infinite;
+        }
+
+        .winner-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            transparent 100%
+          );
+          pointer-events: none;
+        }
+
+        .winner-name {
+          position: relative;
+          z-index: 2;
+          margin-bottom: 1.5rem;
+        }
+
+        .winner-name h3 {
+          font-size: 2.5rem;
+          font-weight: 800;
+          color: #8b4513;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          margin: 0;
+          font-family: var(--font-display);
+        }
+
+        .winner-stats {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          position: relative;
+          z-index: 2;
+        }
+
+        .winner-score,
+        .winner-battles {
+          background: rgba(255, 255, 255, 0.9);
+          padding: 1rem 1.5rem;
+          border-radius: 15px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          border: 2px solid #e67e22;
+        }
+
+        .score-label,
+        .battles-label {
+          display: block;
+          font-size: 0.9rem;
+          color: #8b4513;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .score-value,
+        .battles-value {
+          display: block;
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #d35400;
+          font-family: var(--font-display);
+        }
+
+        @keyframes goldShimmer {
+          0% {
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+          }
+          50% {
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.6);
+          }
+          100% {
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+          }
+        }
+
         /* Responsive adjustments */
-        @media (max-width: 768px) .conseils-button {
-          .header-actions {
+        @media (max-width: 768px) {
+          .conseils-button {
             position: static;
-            text-align: center;
             margin-bottom: 15px;
             font-size: 0.8rem;
             padding: 8px 12px;
+          }
+
+          .header-actions {
+            text-align: center;
+          }
+
+          .winner-name h3 {
+            font-size: 2rem;
+          }
+
+          .winner-stats {
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .winner-score,
+          .winner-battles {
+            padding: 0.8rem 1rem;
+          }
+
+          .score-value,
+          .battles-value {
+            font-size: 1.5rem;
           }
         }
       `}</style>
