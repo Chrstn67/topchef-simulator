@@ -91,16 +91,10 @@ export default function BattleSystem({
 
   const generateChallenge = () => {
     const challenges = [
-      "Créer un plat signature en 60 minutes",
-      "Revisiter un classique de la cuisine française",
-      "Cuisiner avec des ingrédients mystères",
-      "Réaliser un dessert spectaculaire",
-      "Préparer un menu 3 services",
-      "Défi technique: maîtriser une technique imposée",
-      "Cuisiner pour 50 personnes",
-      "Créer un plat végétarien innovant",
-      "Défi pâtisserie: réaliser un entremet",
-      "Cuisiner les yeux bandés",
+      "Les pâtes",
+      "Mini-burgers",
+      "Crêpes aux fruits",
+      "Cookies",
     ];
     return challenges[Math.floor(Math.random() * challenges.length)];
   };

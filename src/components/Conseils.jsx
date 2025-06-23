@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-
 import "../styles/Conseils.css";
 
-export default function Conseils({ isOpen, onClose }) {
+export default function Conseils({ isOpen = true, onClose = () => {} }) {
   const [activeTab, setActiveTab] = useState("hygiene");
 
   if (!isOpen) return null;
@@ -13,25 +12,25 @@ export default function Conseils({ isOpen, onClose }) {
     {
       title: "Lavage des mains",
       description:
-        "Se laver les mains avec de l’eau et du savon pendant 20 à 30 secondes : avant de cuisiner, après être allé aux toilettes, après s’être mouché ou avoir toussé, et après chaque manipulation d’aliments crus.",
+        "Se laver les mains avec de l'eau et du savon pendant 20 à 30 secondes : avant de cuisiner, après être allé aux toilettes, après s'être mouché ou avoir toussé, et après chaque manipulation d'aliments crus.",
       icon: "🧼",
     },
     {
       title: "Désinfection des mains",
       description:
-        "Si pas d’accès immédiat à un point d’eau : utiliser du gel hydroalcoolique (au moins 60 % d’alcool) avant et après les activités collectives.",
+        "Si pas d'accès immédiat à un point d'eau : utiliser du gel hydroalcoolique (au moins 60 % d'alcool) avant et après les activités collectives.",
       icon: "🧴",
     },
     {
       title: "Surfaces de travail",
       description:
-        "Nettoyer avec de l’eau savonneuse puis désinfecter les plans de travail, les tables et les poignées avant et après usage.",
+        "Nettoyer avec de l'eau savonneuse puis désinfecter les plans de travail, les tables et les poignées avant et après usage.",
       icon: "🧽",
     },
     {
       title: "Matériel personnel",
       description:
-        "Chacun utilise sa propre gourde, ses couverts, son verre. Aucun partage de nourriture ou d’ustensiles.",
+        "Chacun utilise sa propre gourde, ses couverts, son verre. Aucun partage de nourriture ou d'ustensiles.",
       icon: "🥤",
     },
     {
@@ -55,7 +54,7 @@ export default function Conseils({ isOpen, onClose }) {
     {
       title: "Ustensiles propres",
       description:
-        "Utiliser des ustensiles propres et dédiés pour chaque type d’aliment (couteaux, planches, pinces). Laver immédiatement après usage.",
+        "Utiliser des ustensiles propres et dédiés pour chaque type d'aliment (couteaux, planches, pinces). Laver immédiatement après usage.",
       icon: "🔪",
     },
     {
@@ -92,62 +91,87 @@ export default function Conseils({ isOpen, onClose }) {
 
   const timingTips = [
     {
-      category: "Entrées",
+      category: "Plats de Pâtes",
+      icon: "🍝",
+      color: "#ff6b6b",
       items: [
         {
-          dish: "Salade composée",
-          time: "15-20 min",
-          tip: "Préparer la vinaigrette en premier",
+          dish: "Pâtes à la bolognaise",
+          time: "45 min",
+          tip: "Préparer la sauce en premier, laisser mijoter pendant que l'eau chauffe et les pâtes cuisent",
         },
         {
-          dish: "Carpaccio",
-          time: "10-15 min",
-          tip: "Congeler la viande 30 min avant pour faciliter la découpe",
+          dish: "Pâtes à la carbonara",
+          time: "20-25 min",
+          tip: "Préparer la sauce hors du feu pour éviter de cuire les œufs, mélanger rapidement avec les pâtes chaudes",
         },
         {
-          dish: "Velouté",
+          dish: "Pâtes twist créatives (pesto roquette-noix, citron-ricotta)",
+          time: "25-30 min",
+          tip: "Mixer les ingrédients de la sauce pendant la cuisson des pâtes pour optimiser le temps",
+        },
+      ],
+    },
+    {
+      category: "Mini-Burgers",
+      icon: "🍔",
+      color: "#4ecdc4",
+      items: [
+        {
+          dish: "Mini-burgers classiques",
           time: "30-40 min",
-          tip: "Commencer par faire suer les légumes",
+          tip: "Former les steaks et préparer la garniture pendant la cuisson des pains ou steaks",
+        },
+        {
+          dish: "Mini-burgers originaux (falafel, saumon, fromage raclette)",
+          time: "35-45 min",
+          tip: "Faire les sauces et tailler les garnitures à l'avance pour pouvoir tout assembler rapidement",
         },
       ],
     },
     {
-      category: "Plats principaux",
+      category: "Sauces & Accompagnements",
+      icon: "🍯",
+      color: "#f39c12",
       items: [
         {
-          dish: "Poisson grillé",
-          time: "15-20 min",
-          tip: "Sortir du frigo 10 min avant cuisson",
-        },
-        {
-          dish: "Viande rouge",
-          time: "20-30 min",
-          tip: "Laisser reposer 5 min après cuisson",
-        },
-        {
-          dish: "Risotto",
-          time: "25-35 min",
-          tip: "Chauffer le bouillon en parallèle",
+          dish: "Sauce burger maison",
+          time: "5-10 min",
+          tip: "Mélanger mayo, ketchup, cornichons hachés, oignon, moutarde, paprika : préparer en début de session",
         },
       ],
     },
     {
-      category: "Desserts",
+      category: "Crêpes",
+      icon: "🥞",
+      color: "#9b59b6",
       items: [
         {
-          dish: "Mousse au chocolat",
-          time: "20 min + 2h frigo",
-          tip: "Préparer en premier pour le temps de prise",
+          dish: "Crêpes aux fruits",
+          time: "30-40 min",
+          tip: "Faire la pâte à l'avance (repos = meilleure texture), et laver/tailler les fruits pendant ce temps",
         },
         {
-          dish: "Tarte aux fruits",
-          time: "45 min + cuisson",
-          tip: "Précuire la pâte à blanc",
+          dish: "Crêpes twist (matcha-mangue, cacao-banane flambée)",
+          time: "35-45 min",
+          tip: "Préparer les garnitures pendant la cuisson des crêpes pour servir chaud",
+        },
+      ],
+    },
+    {
+      category: "Cookies & Pâtisseries",
+      icon: "🍪",
+      color: "#e67e22",
+      items: [
+        {
+          dish: "Cookies classiques",
+          time: "15 min + cuisson 10-12 min",
+          tip: "Former les boules à l'avance, et enfourner à la fin de la session pour un effet « sortie du four »",
         },
         {
-          dish: "Soufflé",
-          time: "30 min",
-          tip: "Servir immédiatement après cuisson",
+          dish: "Cookies originaux (chocolat blanc-framboise, tahini-noisette)",
+          time: "25-30 min",
+          tip: "Ne pas hésiter à surgeler la pâte pour une meilleure tenue pendant la cuisson",
         },
       ],
     },
@@ -157,21 +181,23 @@ export default function Conseils({ isOpen, onClose }) {
     <div className="conseils-overlay">
       <div className="conseils-modal">
         <div className="conseils-header">
-          <h2>📋 Conseils de Cuisine</h2>
-          <button className="close-button" onClick={onClose}>
+          <h2 className="conseils-header-title">📋 Conseils de Cuisine</h2>
+          <button className="conseils-close-button" onClick={onClose}>
             ❌
           </button>
         </div>
 
         <div className="conseils-tabs">
           <button
-            className={`tab ${activeTab === "hygiene" ? "active" : ""}`}
+            className={`conseils-tab ${
+              activeTab === "hygiene" ? "active" : ""
+            }`}
             onClick={() => setActiveTab("hygiene")}
           >
             🧼 Hygiène
           </button>
           <button
-            className={`tab ${activeTab === "timing" ? "active" : ""}`}
+            className={`conseils-tab ${activeTab === "timing" ? "active" : ""}`}
             onClick={() => setActiveTab("timing")}
           >
             ⏱️ Timing
@@ -181,14 +207,14 @@ export default function Conseils({ isOpen, onClose }) {
         <div className="conseils-content">
           {activeTab === "hygiene" && (
             <div className="hygiene-section">
-              <h3>Règles d'hygiène essentielles</h3>
+              <h3 className="section-title">Règles d'hygiène essentielles</h3>
               <div className="rules-grid">
                 {hygieneRules.map((rule, index) => (
                   <div key={index} className="rule-card">
                     <div className="rule-icon">{rule.icon}</div>
                     <div className="rule-text">
-                      <h4>{rule.title}</h4>
-                      <p>{rule.description}</p>
+                      <h4 className="rule-title">{rule.title}</h4>
+                      <p className="rule-description">{rule.description}</p>
                     </div>
                   </div>
                 ))}
@@ -202,35 +228,57 @@ export default function Conseils({ isOpen, onClose }) {
 
           {activeTab === "timing" && (
             <div className="timing-section">
-              <h3>Conseils de préparation et timing</h3>
+              <h3 className="section-title">
+                Conseils de préparation et timing par catégorie
+              </h3>
               {timingTips.map((category, index) => (
                 <div key={index} className="timing-category">
-                  <h4>{category.category}</h4>
+                  <h4
+                    className="category-header"
+                    style={{
+                      background: `linear-gradient(135deg, ${category.color}, ${category.color}dd)`,
+                    }}
+                  >
+                    <span className="category-icon">{category.icon}</span>
+                    {category.category}
+                  </h4>
                   <div className="timing-items">
                     {category.items.map((item, itemIndex) => (
-                      <div key={itemIndex} className="timing-item">
+                      <div
+                        key={itemIndex}
+                        className={`timing-item ${
+                          itemIndex === category.items.length - 1 ? "last" : ""
+                        }`}
+                      >
                         <div className="dish-info">
-                          <strong>{item.dish}</strong>
-                          <span className="time-badge">{item.time}</span>
+                          <span className="dish-name">{item.dish}</span>
+                          <span
+                            className="time-badge"
+                            style={{ background: category.color }}
+                          >
+                            {item.time}
+                          </span>
                         </div>
-                        <p className="tip">💡 {item.tip}</p>
+                        <p className="dish-tip">💡 {item.tip}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               ))}
-              <div className="timing-general-tips">
-                <h4>Conseils généraux de timing</h4>
-                <ul>
-                  <li>
+              <div className="general-tips">
+                <h4 className="general-tips-title">
+                  Conseils généraux de timing
+                </h4>
+                <ul className="general-tips-list">
+                  <li className="general-tips-item">
                     <strong>Mise en place :</strong> Préparer tous les
                     ingrédients avant de commencer
                   </li>
-                  <li>
+                  <li className="general-tips-item">
                     <strong>Multitâche :</strong> Utiliser les temps de cuisson
                     pour préparer d'autres éléments
                   </li>
-                  <li>
+                  <li className="general-tips-item">
                     <strong>Service :</strong> Prévoir 5-10 min de battement
                     pour le dressage
                   </li>
